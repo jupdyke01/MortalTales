@@ -1,0 +1,75 @@
+name: MTCore
+version: '${project.version}'
+main: me.jupdyke01.mtcore.MTCore
+api-version: 1.18
+authors: [ jupdyke01 ]
+description: This is a core plugin for the MortalTales server
+depends: [Essentials]
+
+commands:
+  age:
+    description: Change the age of your active character.
+  chars:
+    description: Create and change active characters.
+  desc:
+    description: Change the description of your active character.
+    aliases:
+      - description
+  intro:
+    description: Change the introduction link of your active character.
+  name:
+    description: Change the name of your active character.
+  race:
+    description: Change the race of your active character.
+  roll:
+    description: test
+  toggle:
+    description: Allows you to enable or disable global chat.
+  global:
+    description: Allows you to talk in global chat.
+    aliases:
+      - g
+      - gl
+  whisper:
+    description: Allows you to talk in whisper chat. 2 range.
+    aliases:
+      - w
+  shout:
+    description: Allows you to talk in shout chat. 60 range.
+    aliases:
+      - s
+  emote:
+    description: Opens an emote selector gui.
+  focus:
+    description: Allows you to focus on an IRP player, or several.
+  staff:
+    description: This is a private channel for staff.
+    aliases:
+      - sc
+  stafftoggle:
+    description: Toggles on/off the staff chat.
+  emoteadd:
+    description: Add an emote change to a player.
+  ticket:
+    description: Ticket main command.
+  combat:
+    description: Combat main command.
+  create:
+    description: Allows you to create a character via gui.
+  omnom:
+    description: Makes you hungry.
+    aliases:
+      - hunger
+      - hungry
+  wounds:
+    description: Mortal Wounds main command.
+    aliases:
+      - mw
+  settings:
+    description: Allows you to change settings.
+    aliases:
+      - options
+  character:
+    description: Allows you to see a players active character sheet.
+    aliases:
+      - char
