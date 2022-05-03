@@ -2,6 +2,8 @@ package me.jupdyke01.mtcore.commands.character;
 
 import me.jupdyke01.mtcore.Lang;
 import me.jupdyke01.mtcore.MTCore;
+import me.jupdyke01.mtcore.cs.CharacterSheet;
+import me.jupdyke01.mtcore.players.MortalPlayer;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -35,8 +37,17 @@ public class NameCMD implements CommandExecutor {
 			name = name + namePart + " ";
 		}
 		name = name.substring(0, name.length() - 1);
-		
-		main.getMortalPlayerManager().getPlayer(p.getUniqueId()).getActiveChar().setName(name);
+
+		MortalPlayer mp = main.getMortalPlayerManager().getPlayer(p.getUniqueId());
+
+		for (CharacterSheet character : mp.getCharacters()) {
+			if (character.getName().equalsIgnoreCase(name))	{
+				p.sendMessage(Lang.PREFIX.getLang() + ChatColor.RED + "You can not have two characters of the same name!");
+				return true;
+			}
+		}
+
+		mp.getActiveChar().setName(name);
 		p.sendMessage(Lang.PREFIX.getLang() + ChatColor.GRAY + "Character name set to: " + ChatColor.YELLOW + name + ChatColor.GRAY + "!");
 		return true;
 	}

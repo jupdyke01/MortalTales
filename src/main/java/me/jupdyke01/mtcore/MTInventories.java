@@ -2,11 +2,13 @@ package me.jupdyke01.mtcore;
 
 import me.jupdyke01.mtcore.cs.CharacterSheet;
 import me.jupdyke01.mtcore.enums.Race;
+import me.jupdyke01.mtcore.enums.Tag;
 import me.jupdyke01.mtcore.players.MortalPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
@@ -283,7 +285,7 @@ public class MTInventories {
 
         ArrayList<ItemStack> characters = new ArrayList<>();
 
-        MortalPlayer mp = main.getMortalPlayerManager().getPlayer(p.getUniqueId());
+        MortalPlayer mp = main.getMortalPlayerManager().getPlayerOrRead(p.getUniqueId());
         for (CharacterSheet character : mp.getCharacters()) {
             ItemStack charItem = character.getCharacterItem(p);
             ItemMeta charItemMeta = charItem.getItemMeta();
@@ -295,7 +297,6 @@ public class MTInventories {
             charItem.setItemMeta(charItemMeta);
             characters.add(charItem);
         }
-
 
         for (int x = 0; x < 9; x++) {
             i.setItem(x, filler);
@@ -325,7 +326,7 @@ public class MTInventories {
         fillerMeta.setDisplayName(" ");
         filler.setItemMeta(fillerMeta);
 
-        MortalPlayer mp = main.getMortalPlayerManager().getPlayer(p.getUniqueId());
+        MortalPlayer mp = main.getMortalPlayerManager().getPlayerOrRead(p.getUniqueId());
 
         for (int x = 0; x < 9; x++) {
             i.setItem(x, filler);
@@ -346,16 +347,61 @@ public class MTInventories {
         MortalPlayer mp = main.getMortalPlayerManager().getPlayer(p.getUniqueId());
         Inventory i = Bukkit.createInventory(null, 9, ChatColor.DARK_GRAY + "Settings");
 
-
         ItemStack global = new UIMCItemBuilder(mp.getSettings().isGlobalChat() ? Material.GREEN_WOOL : Material.RED_WOOL).name(ChatColor.AQUA + "Global Chat").lore(ChatColor.GRAY + "Toggles global chat on and off.", " ", mp.getSettings().isGlobalChat() ? ChatColor.GRAY + "Status: " + ChatColor.GREEN + "Enabled" : ChatColor.GRAY + "Status: " + ChatColor.RED + "Disabled").finish();
         ItemStack text = new UIMCItemBuilder(mp.getSettings().isTextDisplay() ? Material.GREEN_WOOL : Material.RED_WOOL).name(ChatColor.AQUA + "Text Display").lore(ChatColor.GRAY + "Toggles GUI or Text mode for character sheets.", " ", mp.getSettings().isTextDisplay() ? ChatColor.GRAY + "Status: " + ChatColor.GREEN + "Enabled" : ChatColor.GRAY + "Status: " + ChatColor.RED + "Disabled").finish();
         ItemStack staff = new UIMCItemBuilder(mp.getSettings().isStaffChat() ? Material.GREEN_WOOL : Material.RED_WOOL).name(ChatColor.AQUA + "Staff Chat").lore(ChatColor.GRAY + "Toggles staff chat on and off.", " ", mp.getSettings().isStaffChat() ? ChatColor.GRAY + "Status: " + ChatColor.GREEN + "Enabled" : ChatColor.GRAY + "Status: " + ChatColor.RED + "Disabled").finish();
+        ItemStack defaultGlobal = new UIMCItemBuilder(mp.getSettings().isDefaultGlobal() ? Material.GREEN_WOOL : Material.RED_WOOL).name(ChatColor.AQUA + "Default Global").lore(ChatColor.GRAY + "Toggles default chat to global.", " ", mp.getSettings().isDefaultGlobal() ? ChatColor.GRAY + "Status: " + ChatColor.GREEN + "Enabled" : ChatColor.GRAY + "Status: " + ChatColor.RED + "Disabled").finish();
         ItemStack emote = new UIMCItemBuilder(Util.woolColorFromChatColor(mp.getSettings().getEmoteColor())).name(ChatColor.AQUA + "Emote Color").lore(ChatColor.GRAY + "Change emote color.").finish();
 
-        i.setItem(1, global);
-        i.setItem(3, text);
-        i.setItem(5, staff);
-        i.setItem(7, emote);
+        i.setItem(0, global);
+        i.setItem(2, text);
+        i.setItem(4, staff);
+        i.setItem(6, defaultGlobal);
+        i.setItem(8, emote);
+        return i;
+    }
+
+    public Inventory getTagInventory(Player p) {
+        MortalPlayer mp = main.getMortalPlayerManager().getPlayer(p.getUniqueId());
+        Inventory i = Bukkit.createInventory(null, 45, ChatColor.DARK_GRAY + "Tags");
+
+        ItemStack filler = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
+        ItemMeta fillerMeta = filler.getItemMeta();
+        fillerMeta.setDisplayName(" ");
+        filler.setItemMeta(fillerMeta);
+
+        List<ItemStack> tagList = new ArrayList<>();
+
+        for (Tag tag : Tag.values()) {
+            if (tag == Tag.NONE)
+                continue;
+            String locked = p.hasPermission(tag.getPermission()) ? ChatColor.GREEN + "" + ChatColor.BOLD + "UNLOCKED" : ChatColor.RED + "" + ChatColor.BOLD + "LOCKED";
+            UIMCItemBuilder item = new UIMCItemBuilder(Material.NAME_TAG).name(tag.getSuffix()).lore(locked);
+
+            if (mp.getTag() == tag)
+                item.enchant(Enchantment.DURABILITY, 1);
+
+            tagList.add(item.finish());
+        }
+
+        for (int x = 0; x < 9; x++) {
+            i.setItem(x, filler);
+        }
+
+        i.setItem(9, filler);
+        i.setItem(17, filler);
+        i.setItem(18, filler);
+        i.setItem(26, filler);
+        i.setItem(27, filler);
+        i.setItem(35, filler);
+        for (int y = 36; y < 45; y++) {
+            i.setItem(y, filler);
+        }
+
+        for (ItemStack item : tagList) {
+            i.addItem(item);
+        }
+
         return i;
     }
 

@@ -2,10 +2,15 @@ package me.jupdyke01.mtcore.players;
 
 import me.jupdyke01.mtcore.MTCore;
 import me.jupdyke01.mtcore.cs.CharacterSheet;
+import me.jupdyke01.mtcore.enums.Tag;
 import me.jupdyke01.mtcore.settings.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +27,11 @@ public class MortalPlayer {
 	private long nextChange;
 	private int emoteUnlocks;
 	private Settings settings;
-
+	private Tag tag;
 	private ArrayList<CharacterSheet> characters;
 	private ArrayList<ChatColor> unlockedEmotes;
 	private ArrayList<Player> focused = new ArrayList<>();
+	private ArrayList<UUID> ignored = new ArrayList<>();
 
 	//Making new character
 	public MortalPlayer(MTCore main, String name, UUID uuid) {
@@ -38,15 +44,16 @@ public class MortalPlayer {
 		charSheets.add(newChar);
 		this.activeChar = newChar.getId();
 		this.nextChange = 0;
-		this.emoteUnlocks = 1;
+		this.emoteUnlocks = 0;
 		this.unlockedEmotes = new ArrayList<>();
 		unlockedEmotes.add(ChatColor.YELLOW);
 		this.characters = charSheets;
 		this.settings = new Settings();
+		this.tag = Tag.NONE;
 	}
 
 	//Loading existing character
-	public MortalPlayer(MTCore main, String name, UUID uuid, int activeCharId, ArrayList<CharacterSheet> characters, long nextChange, ArrayList<ChatColor> unlockedEmotes, int emoteUnlocks, Settings settings) {
+	public MortalPlayer(MTCore main, String name, UUID uuid, int activeCharId, ArrayList<CharacterSheet> characters, long nextChange, ArrayList<ChatColor> unlockedEmotes, ArrayList<UUID> ignored, int emoteUnlocks, Settings settings, Tag tag) {
 		this.main = main;
 		this.name = name;
 		this.uuid = uuid;
@@ -54,8 +61,10 @@ public class MortalPlayer {
 		this.characters = characters;
 		this.nextChange = nextChange;
 		this.unlockedEmotes = unlockedEmotes;
+		this.ignored = ignored;
 		this.emoteUnlocks = emoteUnlocks;
 		this.settings = settings;
+		this.tag = tag;
 	}
 
 	//Getter for username
@@ -172,6 +181,9 @@ public class MortalPlayer {
 		return unlockedEmotes.stream().map(ChatColor::name).collect(Collectors.toList());
 	}
 
+	public List<String> getIgnoredStringList() {
+		return ignored.stream().map(UUID::toString).collect(Collectors.toList());
+	}
 	public void unlockEmote(ChatColor color) {
 		unlockedEmotes.add(color);
 	}
@@ -185,15 +197,17 @@ public class MortalPlayer {
 
 	public int getFirstAvailableId() {
 		int id = 1;
-		if (!characters.isEmpty()) {
-			idLoop:
-			for (int i = 1; i < 50; i++) {
-				for (CharacterSheet character : characters) {
-					if (i == character.getId())
-						continue idLoop;
+		if (characters != null) {
+			if (!characters.isEmpty()) {
+				idLoop:
+				for (int i = 1; i < 50; i++) {
+					for (CharacterSheet character : characters) {
+						if (i == character.getId())
+							continue idLoop;
+					}
+					id = i;
+					break;
 				}
-				id = i;
-				break;
 			}
 		}
 		return id;
@@ -205,6 +219,45 @@ public class MortalPlayer {
 
 	public void setSettings(Settings settings) {
 		this.settings = settings;
+	}
+
+	public Tag getTag() {
+		return tag;
+	}
+
+	public void setTag(Tag tag) {
+		this.tag = tag;
+	}
+
+	public void focusScoreBoard(Player p) {
+		if (getFocused().size() > 0) {
+			Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
+			Objective obj = board.registerNewObjective("Focus", "dummy", ChatColor.GRAY + "" + "Focus");
+			obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+			for (int i = 0; i < getFocused().size(); i++) {
+				Score focus = obj.getScore(ChatColor.YELLOW + "" + getFocused().get(i).getName());
+				focus.setScore(15+i);
+			}
+			p.setScoreboard(board);
+		} else {
+			p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+		}
+	}
+
+	public void addIgnored(Player p) {
+		ignored.add(p.getUniqueId());
+	}
+
+	public void remIgnored(Player p) {
+		ignored.remove(p.getUniqueId());
+	}
+
+	public ArrayList<UUID> getIgnored() {
+		return ignored;
+	}
+
+	public boolean isIgnored(Player p) {
+		return ignored.contains(p.getUniqueId());
 	}
 
 	/*//Returns essentials muted boolean

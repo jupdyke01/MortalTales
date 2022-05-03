@@ -4,6 +4,9 @@ import me.jupdyke01.mtcore.Lang;
 import me.jupdyke01.mtcore.MTCore;
 import me.jupdyke01.mtcore.players.MortalPlayer;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -41,8 +44,19 @@ public class ShoutCMD implements CommandExecutor {
                         String formatMessage = message.toString();
                         formatMessage = formatMessage.replaceAll("\\*", mp.getSettings().getEmoteColor() + "");
                         formatMessage = formatMessage.replaceAll("\"", ChatColor.WHITE + "\"");
-                        target.sendMessage(ChatColor.GRAY + "" + ChatColor.BOLD + "<" + ChatColor.RED + "S" + ChatColor.GRAY + ChatColor.BOLD + "> " + ChatColor.RESET + ChatColor.AQUA + mp.getActiveChar().getName() + ChatColor.RESET + ": " + ChatColor.GRAY + formatMessage);
-                        return true;
+
+                        TextComponent start = new TextComponent("");
+                    TextComponent name = new TextComponent(ChatColor.GRAY + "" + ChatColor.BOLD + "<" + ChatColor.RED + "S" + ChatColor.GRAY + ChatColor.BOLD + "> " + ChatColor.RESET + ChatColor.AQUA + mp.getActiveChar().getName() + ChatColor.RESET + ": ");
+                    name.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(p.getName()).create()));
+                    TextComponent messageRaw = new TextComponent(ChatColor.GRAY + formatMessage);
+                    messageRaw.setHoverEvent(null);
+                    start.addExtra(name);
+                    start.addExtra(messageRaw);
+                    target.spigot().sendMessage(start);
+
+
+
+                    return true;
                 }
             }
         }

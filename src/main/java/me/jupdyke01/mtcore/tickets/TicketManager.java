@@ -46,7 +46,7 @@ public class TicketManager {
 	}
 
 	public void loadTickets() {
-		String highestID = "";
+		String highestID = "0";
 		if (main.getConfig().contains("tickets")) {
 			for (String str : main.getConfig().getConfigurationSection("tickets").getKeys(false)) {
 				String creatorUUID = main.getConfig().getString("tickets." + str + ".creator");

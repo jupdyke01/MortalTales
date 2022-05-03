@@ -26,7 +26,7 @@ public class CharacterSheet {
 
 	public CharacterSheet(int id) {
 		this.id = id;
-		name = "JonJane Doeman";
+		name = "JonJane Doeman" + id;
 		description = "This is a default character sheet";
 		introduction = "This is a default character sheet";
 		age = 18;

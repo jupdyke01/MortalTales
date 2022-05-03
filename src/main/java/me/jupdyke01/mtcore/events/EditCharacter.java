@@ -31,23 +31,27 @@ public class EditCharacter implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        if (e.getView().getTitle().contains(ChatColor.DARK_GRAY + "Character:")) {
+        if (e.getView().getTitle().contains(ChatColor.DARK_GRAY + "Character: ")) {
             e.setCancelled(true);
             if (e.getCurrentItem() != null) {
                 if (e.getCurrentItem().getType().equals(Material.NAME_TAG)) {
                     p.closeInventory();
+                    p.sendMessage(Lang.PREFIX.getLang() + ChatColor.GRAY + "Type 'cancel' to cancel edit.");
                     p.sendMessage(Lang.PREFIX.getLang() + ChatColor.GRAY + "Please enter your new character name:");
                     editingMode.put(p, "name");
                 } else if (e.getCurrentItem().getType().equals(Material.OAK_SIGN)) {
                     p.closeInventory();
+                    p.sendMessage(Lang.PREFIX.getLang() + ChatColor.GRAY + "Type 'cancel' to cancel edit.");
                     p.sendMessage(Lang.PREFIX.getLang() + ChatColor.GRAY + "Please enter your new character description:");
                     editingMode.put(p, "description");
                 } else if (e.getCurrentItem().getType().equals(Material.CLOCK)) {
                     p.closeInventory();
+                    p.sendMessage(Lang.PREFIX.getLang() + ChatColor.GRAY + "Type 'cancel' to cancel edit.");
                     p.sendMessage(Lang.PREFIX.getLang() + ChatColor.GRAY + "Please enter your new character age:");
                     editingMode.put(p, "age");
                 } else if (e.getCurrentItem().getType().equals(Material.WRITABLE_BOOK)) {
                     p.closeInventory();
+                    p.sendMessage(Lang.PREFIX.getLang() + ChatColor.GRAY + "Type 'cancel' to cancel edit.");
                     p.sendMessage(Lang.PREFIX.getLang() + ChatColor.GRAY + "Please enter your new character introduction link:");
                     editingMode.put(p, "intro");
                 } else if (e.getCurrentItem().getType().equals(Material.GREEN_CONCRETE)) {
@@ -85,6 +89,7 @@ public class EditCharacter implements Listener {
             if (!editingCharacters.containsKey(p))
                 return;
             editingCharacters.get(p).setRace(race);
+            editingCharacters.get(p).setCurrentMortalWounds(race.getDefaultMortalWounds());
             p.openInventory(main.getInventories().changeCharacter(p, editingCharacters.get(p)));
         }
     }
@@ -97,7 +102,18 @@ public class EditCharacter implements Listener {
         if (editingCharacters.containsKey(p)) {
             if (editingMode.containsKey(p)) {
                 e.setCancelled(true);
+                if (e.getMessage().equalsIgnoreCase("cancel")) {
+                    editingMode.remove(p);
+                    p.sendMessage(Lang.PREFIX.getLang() + ChatColor.GRAY + "Edit cancelled!");
+                    return;
+                }
                 if (editingMode.get(p).equalsIgnoreCase("name")) {
+                    for (CharacterSheet character : mp.getCharacters()) {
+                        if (character.getName().equalsIgnoreCase(e.getMessage()))	{
+                            p.sendMessage(Lang.PREFIX.getLang() + ChatColor.RED + "You can not have two characters of the same name!");
+                            return;
+                        }
+                    }
                     editingCharacters.get(p).setName(e.getMessage());
                     editingMode.remove(p);
                 } else if (editingMode.get(p).equalsIgnoreCase("description")) {

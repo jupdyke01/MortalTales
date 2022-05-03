@@ -30,7 +30,7 @@ public enum Race {
 
 	public static boolean raceExists(String str) {
 		for (Race race : Race.values()) {
-			if (race.toString().equals(str) || race.name.equals(str)) {
+			if (race.toString().equalsIgnoreCase(str) || race.name.equalsIgnoreCase(str)) {
 				return true;
 			}
 		}

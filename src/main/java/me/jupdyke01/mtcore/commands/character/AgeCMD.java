@@ -24,7 +24,6 @@ public class AgeCMD implements CommandExecutor {
 			return true;
 		}
 		Player p = (Player) sender;
-		
 		if (args.length == 0) {
 			p.sendMessage(Lang.PREFIX.getLang() + ChatColor.RED + "Please enter an age to set it to!");
 			return true;

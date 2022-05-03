@@ -4,15 +4,10 @@ import me.jupdyke01.mtcore.Lang;
 import me.jupdyke01.mtcore.MTCore;
 import me.jupdyke01.mtcore.players.MortalPlayer;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
 
 public class FocusCMD implements CommandExecutor {
 
@@ -46,31 +41,15 @@ public class FocusCMD implements CommandExecutor {
         if (mp.isFocused(target)) {
             p.sendMessage(Lang.PREFIX.getLang() + ChatColor.GRAY + "Player: " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " has been taken out of focus!");
             mp.remFocused(target);
-            focusScoreBoard(p);
+            mp.focusScoreBoard(p);
         } else {
             p.sendMessage(Lang.PREFIX.getLang() + ChatColor.GRAY + "Player: " + ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " has been put in focus!");
             mp.addFocused(target);
-            focusScoreBoard(p);
+            mp.focusScoreBoard(p);
         }
 
 
 
         return true;
-    }
-
-    public void focusScoreBoard(Player p) {
-        MortalPlayer mp = main.getMortalPlayerManager().getPlayer(p.getUniqueId());
-        if (mp.getFocused().size() > 0) {
-            Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
-            Objective obj = board.registerNewObjective("Focus", "dummy", ChatColor.GRAY + "" + "Focus");
-            obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-            for (int i = 0; i < mp.getFocused().size(); i++) {
-                Score focus = obj.getScore(ChatColor.YELLOW + "" + mp.getFocused().get(i).getName());
-                focus.setScore(15+i);
-            }
-            p.setScoreboard(board);
-        } else {
-            p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-        }
     }
 }

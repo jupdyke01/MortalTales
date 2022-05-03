@@ -7,19 +7,22 @@ public class Settings {
     private boolean globalChat;
     private boolean staffChat;
     private boolean textDisplay;
+    private boolean defaultGlobal;
     private ChatColor emoteColor;
 
     public Settings() {
         globalChat = true;
         staffChat = true;
         textDisplay = false;
+        defaultGlobal = false;
         emoteColor = ChatColor.YELLOW;
     }
 
-    public Settings(boolean globalChat, boolean staffChat, boolean textDisplay, ChatColor emoteColor) {
+    public Settings(boolean globalChat, boolean staffChat, boolean textDisplay, boolean defaultGlobal, ChatColor emoteColor) {
         this.globalChat = globalChat;
         this.staffChat = staffChat;
         this.textDisplay = textDisplay;
+        this.defaultGlobal = defaultGlobal;
         this.emoteColor = emoteColor;
     }
 
@@ -53,5 +56,13 @@ public class Settings {
 
     public void setEmoteColor(ChatColor emoteColor) {
         this.emoteColor = emoteColor;
+    }
+
+    public boolean isDefaultGlobal() {
+        return defaultGlobal;
+    }
+
+    public void setDefaultGlobal(boolean defaultGlobal) {
+        this.defaultGlobal = defaultGlobal;
     }
 }

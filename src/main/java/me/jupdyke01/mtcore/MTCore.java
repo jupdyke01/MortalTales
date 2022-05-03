@@ -7,6 +7,7 @@ import me.jupdyke01.mtcore.commands.combat.CombatCMD;
 import me.jupdyke01.mtcore.commands.combat.RollCMD;
 import me.jupdyke01.mtcore.commands.general.OmnomCMD;
 import me.jupdyke01.mtcore.commands.general.SettingsCMD;
+import me.jupdyke01.mtcore.commands.general.SitCMD;
 import me.jupdyke01.mtcore.commands.general.TicketCMD;
 import me.jupdyke01.mtcore.events.*;
 import me.jupdyke01.mtcore.players.MortalPlayerManager;
@@ -33,8 +34,9 @@ public class MTCore extends JavaPlugin {
 		inventories = new MTInventories(this);
 		//essentials = (IEssentials) Bukkit.getPluginManager().getPlugin("Essentials");
 		mpm = new MortalPlayerManager(this);
-		mpm.loadPlayers();
+		//mpm.loadPlayers();
 		for (Player p : Bukkit.getOnlinePlayers()) {
+			mpm.loadPlayer(p.getUniqueId());
 			if (mpm.getPlayer(p.getUniqueId()) == null) {
 				mpm.createPlayer(p.getName(), p.getUniqueId());
 			}
@@ -46,6 +48,7 @@ public class MTCore extends JavaPlugin {
 	}
 	
 	public void onDisable() {
+		//mpm.savePlayers();
 		mpm.savePlayers();
 		ticketManager.saveTickets();
 	}
@@ -72,16 +75,24 @@ public class MTCore extends JavaPlugin {
 		getCommand("wounds").setExecutor(new WoundsCMD(this));
 		getCommand("settings").setExecutor(new SettingsCMD(this));
 		getCommand("character").setExecutor(new CharacterCMD(this));
+		getCommand("stats").setExecutor(new StatsCMD(this));
+		getCommand("tag").setExecutor(new TagCMD(this));
+		getCommand("ignore").setExecutor(new IgnoreCMD(this));
 		getCommand("roll").setExecutor(new RollCMD());
 		getCommand("omnom").setExecutor(new OmnomCMD());
+		getCommand("races").setExecutor(new RacesCMD());
+		getCommand("sit").setExecutor(new SitCMD());
 	}
 	
 	public void initiateEvents() {
 		getServer().getPluginManager().registerEvents(new JoinEvent(this),this);
-		getServer().getPluginManager().registerEvents(chars, this);
 		getServer().getPluginManager().registerEvents(new EmoteSelect(this), this);
 		getServer().getPluginManager().registerEvents(new ChatEvent(this), this);
 		getServer().getPluginManager().registerEvents(new SettingsEvent(this), this);
+		getServer().getPluginManager().registerEvents(new TagSelect(this), this);
+		getServer().getPluginManager().registerEvents(new ExitEvent(this), this);
+		getServer().getPluginManager().registerEvents(new Dismount(), this);
+		getServer().getPluginManager().registerEvents(chars, this);
 		getServer().getPluginManager().registerEvents(editCharacter, this);
 	}
 	

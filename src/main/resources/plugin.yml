@@ -73,3 +73,17 @@ commands:
     description: Allows you to see a players active character sheet.
     aliases:
       - char
+  stats:
+    description: Allows staff to change character stats.
+  races:
+    description: Displays races.
+  sit:
+    description: Allows you to sit.
+  tag:
+    description: Allows you to select a tag!
+    aliases:
+      - tags
+  ignore:
+    description: Allows you to avoid seeing a players global chat.
+    aliases:
+      - ignored

@@ -3,9 +3,11 @@ package me.jupdyke01.mtcore.commands.combat;
 import me.jupdyke01.mtcore.Lang;
 import net.md_5.bungee.api.ChatColor;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.Random;
 import java.util.Scanner;
@@ -14,6 +16,9 @@ public class RollCMD implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String cmd, String[] args) {
+
+        if (!(sender instanceof Player p))
+            return true;
 
         if (args.length == 0) {
             sender.sendMessage(Lang.PREFIX.getLang() + ChatColor.RED + "You must enter a number to roll out of!");
@@ -27,7 +32,16 @@ public class RollCMD implements CommandExecutor {
         int expression = (int) new ExpressionBuilder(args[0]).build().evaluate();
         expression += result;
         expression -= baseRoll;
-        sender.sendMessage("Result: " + expression);
+
+
+        for (Player target : Bukkit.getOnlinePlayers()) {
+            if (p.getWorld().equals(target.getWorld())) {
+                if (p.getLocation().distance(target.getLocation()) < 20) {
+                    target.sendMessage(Lang.PREFIX.getLang() + ChatColor.YELLOW + p.getName() + ChatColor.GRAY + " has rolled: " + ChatColor.YELLOW + args[0] + ChatColor.GRAY + "!");
+                    target.sendMessage(ChatColor.GRAY + "Result: " + ChatColor.YELLOW + expression);
+                }
+            }
+        }
         return false;
     }
 }

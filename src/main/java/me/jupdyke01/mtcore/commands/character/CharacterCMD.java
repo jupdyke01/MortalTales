@@ -39,7 +39,7 @@ public class CharacterCMD implements CommandExecutor {
             target = p;
         }
         if (mp.getSettings().isTextDisplay()) {
-            MortalPlayer tp = main.getMortalPlayerManager().getPlayer(target.getUniqueId());
+            MortalPlayer tp = main.getMortalPlayerManager().getPlayerOrRead(target.getUniqueId());
             tp.getActiveChar().getCharacterText().forEach(p::sendMessage);
         } else {
             p.openInventory(main.getInventories().getCharInventory(target));

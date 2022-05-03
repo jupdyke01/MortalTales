@@ -38,7 +38,10 @@ public class SettingsEvent implements Listener {
         } else if (clicked.getItemMeta().getDisplayName().contains("Staff Chat")) {
             mp.getSettings().setStaffChat(!mp.getSettings().isStaffChat());
             p.openInventory(main.getInventories().getSettingsInventory(p));
-        } else if (clicked.getItemMeta().getDisplayName().contains("Emote Color")) {
+        } else if (clicked.getItemMeta().getDisplayName().contains("Default Global")) {
+            mp.getSettings().setDefaultGlobal(!mp.getSettings().isDefaultGlobal());
+            p.openInventory(main.getInventories().getSettingsInventory(p));
+        }else if (clicked.getItemMeta().getDisplayName().contains("Emote Color")) {
             p.openInventory(main.getInventories().getEmoteColorInventory(p));
         }
     }

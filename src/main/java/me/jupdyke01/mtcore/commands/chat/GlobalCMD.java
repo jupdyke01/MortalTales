@@ -40,9 +40,11 @@ public class GlobalCMD implements CommandExecutor {
             MortalPlayer mp = main.getMortalPlayerManager().getPlayer(p.getUniqueId());
             if (mp.getSettings().isGlobalChat()) {
                 for (Player target : Bukkit.getOnlinePlayers()) {
+                    MortalPlayer tp = main.getMortalPlayerManager().getPlayer(target.getUniqueId());
                     if (main.getMortalPlayerManager().getPlayer(target.getUniqueId()).getSettings().isGlobalChat()) {
-                        target.sendMessage(ChatColor.GRAY + "" + ChatColor.BOLD + "<" + ChatColor.YELLOW + "Global" + ChatColor.GRAY + ChatColor.BOLD + "> " + p.getDisplayName() + ChatColor.WHITE + ": " + message.toString());
-                        return true;
+                        if (!tp.isIgnored(p)) {
+                            target.sendMessage(ChatColor.GRAY + "" + ChatColor.BOLD + "<" + ChatColor.YELLOW + "Global" + ChatColor.GRAY + ChatColor.BOLD + "> " + p.getDisplayName() + mp.getTag().getSuffix() + ChatColor.WHITE + ": " + message.toString());
+                        }
                     }
                 }
             } else {

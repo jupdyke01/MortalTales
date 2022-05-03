@@ -49,7 +49,20 @@ public class CharsCMD implements CommandExecutor, Listener{
 		Player p = (Player) sender;
 		MortalPlayer mp = main.getMortalPlayerManager().getPlayer(p.getUniqueId());
 
-		if (args.length > 0 && args[0].equals("create")) {
+		if (args.length > 0 && args[0].equals("help")) {
+			p.sendMessage(ChatColor.GRAY + "=-=-=-=-=-==-=-=-=-=-=" + ChatColor.YELLOW + "/chars" + ChatColor.GRAY + "=-=-=-=-=-==-=-=-=-=-=");
+			p.sendMessage(" ");
+			p.sendMessage(ChatColor.GRAY + "/chars create " + ChatColor.YELLOW + "(race) [event]");
+			p.sendMessage(ChatColor.AQUA + "This will create a character with the specified race.");
+			p.sendMessage(" ");
+			p.sendMessage(ChatColor.GRAY + "/chars active " + ChatColor.YELLOW + "(character name)");
+			p.sendMessage(ChatColor.AQUA + "This will make the specified character your active character.");
+			p.sendMessage(" ");
+			p.sendMessage(ChatColor.GRAY + "/chars delete " + ChatColor.YELLOW + "(character name)");
+			p.sendMessage(ChatColor.AQUA + "This will delete the specified character.");
+			p.sendMessage(" ");
+			p.sendMessage(ChatColor.GRAY + "=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=-==-=-=-=-=-=");
+		} else if (args.length > 0 && args[0].equals("create")) {
 			boolean isVip = p.hasPermission("mortalplayer.vip");
 			boolean isEventChar = false;
 			if (cmdArgs.isEmpty()) {
@@ -87,10 +100,11 @@ public class CharsCMD implements CommandExecutor, Listener{
 				p.sendMessage(Lang.PREFIX.getLang() + ChatColor.GOLD + race + ChatColor.RED + " is not a race, Please use /races to list them!");
 				return true;
 			}
-			Race r = Race.valueOf(race);
+			Race r = Race.valueOf(race.toUpperCase());
 
 			CharacterSheet newChar = new CharacterSheet(mp.getFirstAvailableId());
 			newChar.setRace(r);
+			newChar.setCurrentMortalWounds(r.getDefaultMortalWounds());
 			newChar.setName("NewChar" + (mp.getCharacters().size() + 1));
 			newChar.setEvent(isEventChar);
 			mp.addCharacter(newChar);
@@ -171,7 +185,11 @@ public class CharsCMD implements CommandExecutor, Listener{
 			if (p.hasPermission("mortalplayer.staff")) {
 				p.openInventory(main.getInventories().getCharsInventory(target));
 			} else {
-				p.openInventory(main.getInventories().getCharInventory(target));
+				if (target == p) {
+					p.openInventory(main.getInventories().getCharsInventory(target));
+				} else {
+					p.openInventory(main.getInventories().getCharInventory(target));
+				}
 			}
 		}
 		return true;
