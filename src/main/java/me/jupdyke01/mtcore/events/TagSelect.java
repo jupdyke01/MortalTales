@@ -4,6 +4,7 @@ package me.jupdyke01.mtcore.events;
 import me.jupdyke01.mtcore.MTCore;
 import me.jupdyke01.mtcore.enums.Tag;
 import me.jupdyke01.mtcore.players.MortalPlayer;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,6 +27,8 @@ public class TagSelect implements Listener {
             return;
         e.setCancelled(true);
         if (e.getCurrentItem() == null || !e.getCurrentItem().hasItemMeta() || !e.getCurrentItem().getItemMeta().hasDisplayName())
+            return;
+        if (!e.getCurrentItem().getType().equals(Material.NAME_TAG))
             return;
         Tag tag = Tag.getTagBySuffix(e.getCurrentItem().getItemMeta().getDisplayName());
         if (tag == null)

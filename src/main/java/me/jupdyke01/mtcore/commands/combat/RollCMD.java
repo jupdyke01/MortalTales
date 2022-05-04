@@ -21,7 +21,16 @@ public class RollCMD implements CommandExecutor {
             return true;
 
         if (args.length == 0) {
-            sender.sendMessage(Lang.PREFIX.getLang() + ChatColor.RED + "You must enter a number to roll out of!");
+            Random r = new Random();
+            int result = r.nextInt(20) + 1;
+            for (Player target : Bukkit.getOnlinePlayers()) {
+                if (p.getWorld().equals(target.getWorld())) {
+                    if (p.getLocation().distance(target.getLocation()) < 20) {
+                        target.sendMessage(Lang.PREFIX.getLang() + ChatColor.YELLOW + p.getName() + ChatColor.GRAY + " has rolled: " + ChatColor.YELLOW + "20" + ChatColor.GRAY + "!");
+                        target.sendMessage(ChatColor.GRAY + "Result: " + ChatColor.YELLOW + result);
+                    }
+                }
+            }
             return false;
         }
         Random r = new Random();

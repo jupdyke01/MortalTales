@@ -363,12 +363,17 @@ public class MTInventories {
 
     public Inventory getTagInventory(Player p) {
         MortalPlayer mp = main.getMortalPlayerManager().getPlayer(p.getUniqueId());
-        Inventory i = Bukkit.createInventory(null, 45, ChatColor.DARK_GRAY + "Tags");
+        Inventory i = Bukkit.createInventory(null, 54, ChatColor.DARK_GRAY + "Tags");
 
         ItemStack filler = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
         ItemMeta fillerMeta = filler.getItemMeta();
         fillerMeta.setDisplayName(" ");
         filler.setItemMeta(fillerMeta);
+
+        ItemStack yellow = new UIMCItemBuilder(Material.YELLOW_WOOL).name(ChatColor.YELLOW + "Yellow Tags").finish();
+        ItemStack purple = new UIMCItemBuilder(Material.MAGENTA_WOOL).name(ChatColor.LIGHT_PURPLE + "Purple Tags").finish();
+        ItemStack blue = new UIMCItemBuilder(Material.BLUE_WOOL).name(ChatColor.BLUE + "Blue Tags").finish();
+        ItemStack red = new UIMCItemBuilder(Material.RED_WOOL).name(ChatColor.RED + "Red Tags").finish();
 
         List<ItemStack> tagList = new ArrayList<>();
 
@@ -383,23 +388,22 @@ public class MTInventories {
 
             tagList.add(item.finish());
         }
-
-        for (int x = 0; x < 9; x++) {
-            i.setItem(x, filler);
+        int tag = 0;
+        for (int x = 1; x < 8; x+=2) {
+            for (int y = 1; y < 6; y++) {
+                i.setItem(x + y*9, tagList.get(tag));
+                tag++;
+            }
         }
 
-        i.setItem(9, filler);
-        i.setItem(17, filler);
-        i.setItem(18, filler);
-        i.setItem(26, filler);
-        i.setItem(27, filler);
-        i.setItem(35, filler);
-        for (int y = 36; y < 45; y++) {
-            i.setItem(y, filler);
-        }
+        i.setItem(1, yellow);
+        i.setItem(3, purple);
+        i.setItem(5, blue);
+        i.setItem(7, red);
 
-        for (ItemStack item : tagList) {
-            i.addItem(item);
+        for (int y = 0; y < 54; y++) {
+            if (i.getItem(y) == null)
+                i.setItem(y, filler);
         }
 
         return i;

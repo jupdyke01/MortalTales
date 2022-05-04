@@ -92,6 +92,7 @@ public class MTCore extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new TagSelect(this), this);
 		getServer().getPluginManager().registerEvents(new ExitEvent(this), this);
 		getServer().getPluginManager().registerEvents(new Dismount(), this);
+		getServer().getPluginManager().registerEvents(new PlayerInteract(), this);
 		getServer().getPluginManager().registerEvents(chars, this);
 		getServer().getPluginManager().registerEvents(editCharacter, this);
 	}
