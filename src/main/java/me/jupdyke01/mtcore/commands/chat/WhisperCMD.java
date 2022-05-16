@@ -44,8 +44,15 @@ public class WhisperCMD implements CommandExecutor {
                 if (p.getLocation().distance(target.getLocation()) <= 2) {
                     String formatMessage = message.toString();
                     formatMessage = formatMessage.replaceAll("\\*", mp.getSettings().getEmoteColor() + "");
-                    formatMessage = formatMessage.replaceAll("\"", ChatColor.WHITE + "\"");
-
+                    MortalPlayer tp = main.getMortalPlayerManager().getPlayer(target.getUniqueId());
+                    ChatColor messageColor = ChatColor.WHITE;
+                    if (tp.getFocused().size() > 0) {
+                        if (tp.isFocused(p))
+                            messageColor = ChatColor.WHITE;
+                        else
+                            messageColor = ChatColor.DARK_GRAY;
+                    }
+                    formatMessage = formatMessage.replaceAll("\"", messageColor + "\"");
                     TextComponent start = new TextComponent("");
                     TextComponent name = new TextComponent(ChatColor.GRAY + "" + ChatColor.BOLD + "<" + ChatColor.BLUE + "W" + ChatColor.GRAY + ChatColor.BOLD + "> " + ChatColor.RESET + ChatColor.AQUA + mp.getActiveChar().getName() + ChatColor.RESET + ": ");
                     name.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(p.getName()).create()));

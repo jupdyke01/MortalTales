@@ -259,6 +259,27 @@ public class MortalPlayer {
 	public boolean isIgnored(Player p) {
 		return ignored.contains(p.getUniqueId());
 	}
+	public int getTotalNonEventCharacters() {
+		int nonEvent = 0;
+		for (CharacterSheet character : characters) {
+			if (!character.isEvent()) {
+				System.out.println("Non Event Character: " + character.getName());
+				nonEvent++;
+			}
+		}
+		return nonEvent;
+	}
+
+	public int getMaxCharacterSlots(Player p) {
+		int slots = 2;
+		if (p.hasPermission("mortalplayer.vip"))
+			slots = 3;
+		return slots;
+	}
+
+	public int getAvailableSlots(Player p) {
+		return getMaxCharacterSlots(p) - getTotalNonEventCharacters();
+	}
 
 	/*//Returns essentials muted boolean
 	public boolean isMuted() {

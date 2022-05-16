@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 public class EmoteAddCMD implements CommandExecutor {
 
-    private MTCore main;
+    private final MTCore main;
 
     public EmoteAddCMD(MTCore main) {
         this.main = main;

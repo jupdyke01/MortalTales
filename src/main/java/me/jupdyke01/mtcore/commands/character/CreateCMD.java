@@ -28,15 +28,12 @@ public class CreateCMD implements CommandExecutor {
         Player p = (Player) sender;
         MortalPlayer mp = main.getMortalPlayerManager().getPlayer(p.getUniqueId());
         if (args.length == 0) {
-            if (mp.getCharacters().size() >= 2 && !p.hasPermission("mortalplayer.vip")) {
-                p.sendMessage(Lang.PREFIX.getLang() + ChatColor.RED + "You have too many characters. Upgrade to VIP for: 3");
-                return true;
+            if (!p.isOp()) {
+                if (mp.getAvailableSlots(p) <= 0) {
+                    p.sendMessage(Lang.PREFIX.getLang() + ChatColor.RED + "You have too many characters. Upgrade to VIP for: 3");
+                    return true;
+                }
             }
-            if (mp.getCharacters().size() >= 3) {
-                p.sendMessage(Lang.PREFIX.getLang() + ChatColor.RED + "You have too many characters. Max for VIP is: 3");
-                return true;
-            }
-
             main.getEditCharacter().newCharacter(p, Race.HUMAN, false);
         } else {
             if (args[0].equalsIgnoreCase("event")) {
@@ -44,10 +41,13 @@ public class CreateCMD implements CommandExecutor {
                     p.sendMessage(Lang.PREFIX.getLang() + ChatColor.RED + "You are not allowed to make an event character!");
                     return true;
                 }
-
                 main.getEditCharacter().newCharacter(p, Race.HUMAN, true);
             }
         }
         return true;
     }
 }
+
+// Have circle
+// Get point at radius for every 10 degrees
+// Get points between two points

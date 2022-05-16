@@ -41,7 +41,15 @@ public class ChatEvent implements Listener {
                 if (p.getLocation().distance(target.getLocation()) <= 20) {
                     String formatMessage = e.getMessage();
                     formatMessage = formatMessage.replaceAll("\\*", mp.getSettings().getEmoteColor() + "");
-                    formatMessage = formatMessage.replaceAll("\"", ChatColor.WHITE + "\"");
+                    MortalPlayer tp = main.getMortalPlayerManager().getPlayer(target.getUniqueId());
+                    ChatColor messageColor = ChatColor.WHITE;
+                    if (tp.getFocused().size() > 0) {
+                        if (tp.isFocused(p))
+                            messageColor = ChatColor.WHITE;
+                        else
+                            messageColor = ChatColor.DARK_GRAY;
+                    }
+                    formatMessage = formatMessage.replaceAll("\"", messageColor + "\"");
                     TextComponent start = new TextComponent("");
                     TextComponent name = new TextComponent(ChatColor.AQUA + mp.getActiveChar().getName() + ChatColor.RESET + ": " + ChatColor.GRAY);
                     name.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(p.getName()).create()));

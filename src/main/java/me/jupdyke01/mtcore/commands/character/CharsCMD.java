@@ -74,14 +74,10 @@ public class CharsCMD implements CommandExecutor, Listener{
 					isEventChar = true;
 				}
 			}
-			if (!isEventChar) {
-				if (mp.getCharacters().size() >= 2 && !isVip) {
-					p.sendMessage(Lang.PREFIX.getLang() + ChatColor.RED + "You have too many characters. Upgrade to VIP for: 3");
-					return true;
-				}
 
-				if (mp.getCharacters().size() >= 3) {
-					p.sendMessage(Lang.PREFIX.getLang() + ChatColor.RED + "You have too many characters. Max for VIP is: 3");
+			if (!isEventChar) {
+				if (mp.getAvailableSlots(p) <= 0) {
+					p.sendMessage(Lang.PREFIX.getLang() + net.md_5.bungee.api.ChatColor.RED + "You have too many characters. Upgrade to VIP for: 3");
 					return true;
 				}
 			}

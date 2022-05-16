@@ -87,3 +87,5 @@ commands:
     description: Allows you to avoid seeing a players global chat.
     aliases:
       - ignored
+  headlookup:
+    description: Staff command

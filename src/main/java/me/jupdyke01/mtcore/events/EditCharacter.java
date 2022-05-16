@@ -154,7 +154,7 @@ public class EditCharacter implements Listener {
         } else {
             character = new CharacterSheet(mp.getFirstAvailableId());
         }
-        character.setEvent(true);
+        character.setEvent(event);
         editingCharacters.put(p, character);
         p.openInventory(main.getInventories().raceInventory());
     }

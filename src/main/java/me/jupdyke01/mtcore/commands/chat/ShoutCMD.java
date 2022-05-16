@@ -41,11 +41,18 @@ public class ShoutCMD implements CommandExecutor {
             MortalPlayer mp = main.getMortalPlayerManager().getPlayer(p.getUniqueId());
             for (Player target : Bukkit.getOnlinePlayers()) {
                 if (p.getLocation().distance(target.getLocation()) <= 60) {
-                        String formatMessage = message.toString();
-                        formatMessage = formatMessage.replaceAll("\\*", mp.getSettings().getEmoteColor() + "");
-                        formatMessage = formatMessage.replaceAll("\"", ChatColor.WHITE + "\"");
-
-                        TextComponent start = new TextComponent("");
+                    String formatMessage = message.toString();
+                    formatMessage = formatMessage.replaceAll("\\*", mp.getSettings().getEmoteColor() + "");
+                    MortalPlayer tp = main.getMortalPlayerManager().getPlayer(target.getUniqueId());
+                    ChatColor messageColor = ChatColor.WHITE;
+                    if (tp.getFocused().size() > 0) {
+                        if (tp.isFocused(p))
+                            messageColor = ChatColor.WHITE;
+                        else
+                            messageColor = ChatColor.DARK_GRAY;
+                    }
+                    formatMessage = formatMessage.replaceAll("\"", messageColor + "\"");
+                    TextComponent start = new TextComponent("");
                     TextComponent name = new TextComponent(ChatColor.GRAY + "" + ChatColor.BOLD + "<" + ChatColor.RED + "S" + ChatColor.GRAY + ChatColor.BOLD + "> " + ChatColor.RESET + ChatColor.AQUA + mp.getActiveChar().getName() + ChatColor.RESET + ": ");
                     name.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(p.getName()).create()));
                     TextComponent messageRaw = new TextComponent(ChatColor.GRAY + formatMessage);

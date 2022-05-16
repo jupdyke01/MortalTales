@@ -285,6 +285,8 @@ public class MTInventories {
 
         ArrayList<ItemStack> characters = new ArrayList<>();
 
+        ItemStack availableSlot = new UIMCItemBuilder(Material.LIME_STAINED_GLASS_PANE).name(ChatColor.GREEN + "" + ChatColor.BOLD + "Available Slot").lore(ChatColor.GRAY + "You can have an additional character here.").amount(1).finish();
+
         MortalPlayer mp = main.getMortalPlayerManager().getPlayerOrRead(p.getUniqueId());
         for (CharacterSheet character : mp.getCharacters()) {
             ItemStack charItem = character.getCharacterItem(p);
@@ -297,6 +299,13 @@ public class MTInventories {
             charItem.setItemMeta(charItemMeta);
             characters.add(charItem);
         }
+        if (p.isOnline()) {
+            Player onlineP = p.getPlayer();
+            for (int available = 0; available < mp.getAvailableSlots(onlineP); available++) {
+                characters.add(availableSlot);
+            }
+        }
+
 
         for (int x = 0; x < 9; x++) {
             i.setItem(x, filler);
@@ -328,18 +337,11 @@ public class MTInventories {
 
         MortalPlayer mp = main.getMortalPlayerManager().getPlayerOrRead(p.getUniqueId());
 
-        for (int x = 0; x < 9; x++) {
-            i.setItem(x, filler);
-        }
-
-        i.setItem(9, filler);
         i.setItem(13, mp.getActiveChar().getCharacterItem(p));
-        i.setItem(17, filler);
-
-        for (int x = 18; x < 27; x++) {
-            i.setItem(x, filler);
+        for (int x = 0; x < 27; x++) {
+            if (i.getItem(x).getType() == Material.AIR)
+                i.setItem(x, filler);
         }
-
         return i;
     }
 

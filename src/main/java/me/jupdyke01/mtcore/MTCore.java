@@ -13,6 +13,8 @@ import me.jupdyke01.mtcore.events.*;
 import me.jupdyke01.mtcore.players.MortalPlayerManager;
 import me.jupdyke01.mtcore.tickets.TicketManager;
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,6 +27,7 @@ public class MTCore extends JavaPlugin {
 	private TicketManager ticketManager;
 	private CombatManager combatManager;
 	private MTInventories inventories;
+	private TimeControl timeControl;
 
 	public void onEnable() {
 		chars = new CharsCMD(this);
@@ -32,6 +35,7 @@ public class MTCore extends JavaPlugin {
 		ticketManager = new TicketManager(this);
 		combatManager = new CombatManager(this);
 		inventories = new MTInventories(this);
+		timeControl = new TimeControl();
 		//essentials = (IEssentials) Bukkit.getPluginManager().getPlugin("Essentials");
 		mpm = new MortalPlayerManager(this);
 		//mpm.loadPlayers();
@@ -42,6 +46,11 @@ public class MTCore extends JavaPlugin {
 			}
 		}
 		ticketManager.loadTickets();
+		for (World world : Bukkit.getWorlds()) {
+			world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+			timeControl.runClock(world, this);
+
+		}
 		initiateCommands();
 		initiateEvents();
 		saveDefaultConfig();
